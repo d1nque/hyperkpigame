@@ -17,6 +17,10 @@ namespace Assets.Scripts.Player
 
                 _playerEntity.Jump();
             }
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                _playerEntity.Attack();
+            }
             
         }
         private void FixedUpdate()

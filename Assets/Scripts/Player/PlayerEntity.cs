@@ -16,6 +16,10 @@ namespace Player
         [SerializeField] private float _jumpForce;
         [SerializeField] private bool _isJumping;
 
+        [SerializeField] private Animator _animator;
+        [SerializeField] private bool _isAttacking;
+
+        private AnimationType _currentAnimationType;
         private Rigidbody2D _rigidbody;
         private Vector2 _movement;
         
@@ -32,6 +36,28 @@ namespace Player
             _rigidbody.velocity = velocity;
         }
         
+
+        private void Update()
+        {
+            UpdateAnimations();
+        }
+
+        private void UpdateAnimations()
+        {
+            PlayAnimation(AnimationType.Idle, true);
+            PlayAnimation(AnimationType.Run, _movement.magnitude > 0);
+            PlayAnimation(AnimationType.Jump, _isJumping);
+            PlayAnimation(AnimationType.Attack, _isAttacking);
+        }
+
+        public void Attack()
+        {
+            _isAttacking = true;
+        }
+        private void AttackStop()
+        {
+            _isAttacking = false;
+        }
         
         private void SetDirection(float direction) 
         {
@@ -66,7 +92,31 @@ namespace Player
         private void OnCollisionExit2D(Collision2D collision)
         {
             _isJumping = true;
-        }   
+        }  
+
+        private void PlayAnimation(AnimationType animationType, bool active)
+        {
+            if (!active)
+            {
+                if (_currentAnimationType == AnimationType.Idle || _currentAnimationType != animationType)
+                {
+                    return;
+                }
+                _currentAnimationType = AnimationType.Idle;
+                PlayAnimation(_currentAnimationType);
+                return;
+            }
+            if (_currentAnimationType > animationType)
+            {
+                return;
+            }
+            _currentAnimationType = animationType;
+            PlayAnimation(_currentAnimationType);
+        }
+        private void PlayAnimation(AnimationType animationType)
+        {
+            _animator.SetInteger(nameof(AnimationType), (int)animationType);
+        } 
 
     }
 
