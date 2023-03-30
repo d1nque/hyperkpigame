@@ -45,7 +45,7 @@ namespace Player
         private void UpdateAnimations()
         {
             PlayAnimation(AnimationType.Idle, true);
-            PlayAnimation(AnimationType.Run, _movement.magnitude > 0);
+            PlayAnimation(AnimationType.Run, _movement.x != 0);
             PlayAnimation(AnimationType.Jump, _isJumping);
             PlayAnimation(AnimationType.Attack, _isAttacking);
         }
@@ -53,6 +53,7 @@ namespace Player
         public void Attack()
         {
             _isAttacking = true;
+            Debug.Log("attack");
         }
         private void AttackStop()
         {
